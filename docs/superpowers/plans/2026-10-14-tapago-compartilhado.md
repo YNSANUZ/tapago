@@ -105,18 +105,17 @@
 ### Task 5: Monthly history and recurring expenses
 
 **Files:**
-- Create: `supabase/migrations/0004_periods.sql`, `src/periods.js`, `test/periods.test.mjs`, `supabase/tests/database/periods.test.sql`
-- Modify: `src/main.js`
-- Test: `test/periods.test.mjs`, `supabase/tests/database/periods.test.sql`
+- Create: `supabase/migrations/0004_periods.sql`, `src/periods.js`, `test/periods.test.mjs`
+- Test: `test/periods.test.mjs` using PGlite/PostgreSQL WASM
 
 **Interfaces:**
-- `ensureCurrentExpenseOccurrences(ownerId, localDate): Promise<Occurrence[]>` calls an idempotent RPC that creates at most one occurrence per expense and month.
+- `ensureCurrentExpenseOccurrences(groupId): Promise<Occurrence[]>` calls an idempotent Sao Paulo month RPC that creates at most one occurrence per active expense.
 - `getMonthlyHistory(groupId, year): Promise<MonthlySnapshot[]>` requires active membership and returns frozen monthly values and payment event metadata.
 
 - [ ] **Step 1: Write failing tests** for due-day rollover, pending item creates exactly one new month occurrence, repeated initialization creates no duplicates, days 29–31 clamp to month end, and historical totals survive future value changes.
 - [ ] **Step 2: Run tests to confirm the rollover and snapshot cases fail.**
 - [ ] **Step 3: Add the timezone-aware period RPC and immutable snapshot/event rules; migrate history navigation to backend reads.**
-- [ ] **Step 4: Run SQL/Node tests and verify current month and prior month in the UI.**
+- [ ] **Step 4: Run PGlite/Node tests; verify current and prior month through the connected UI in Task 7.**
 - [ ] **Step 5: Commit monthly records.**
 
 ### Task 6: Public aggregate share and anonymous live page
