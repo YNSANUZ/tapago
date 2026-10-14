@@ -6,7 +6,7 @@
 
 **Architecture:** Keep the approved responsive frontend, package it as a small static Vite app, and use Supabase Auth + PostgreSQL/RLS/RPC/Realtime as the shared source of truth. Develop with local Supabase, then configure a dedicated cloud project and publish only the isolated `apps/tapago` repository and `/tapago/` assets after backup and verification.
 
-**Tech Stack:** HTML, CSS, JavaScript ES modules, Vite, `@supabase/supabase-js`, Supabase CLI/PostgreSQL, Node built-in test runner, Playwright for browser journeys if available.
+**Tech Stack:** HTML, CSS, JavaScript ES modules, Vite, `@supabase/supabase-js`, PostgreSQL migrations, `@electric-sql/pglite` for local SQL/RLS tests, Node built-in test runner, Playwright for browser journeys if available.
 
 **Spec:** `docs/superpowers/specs/2026-10-14-tapago-compartilhado-design.md`
 
@@ -60,9 +60,9 @@
 - Money columns use integer centavos; all timestamps use `timestamptz`; period keys use `date` month starts.
 
 - [ ] **Step 1: Write SQL assertions** for group/member visibility, admin versus participant writes, personal profile privacy, historical-member authorization, and anonymous denial.
-- [ ] **Step 2: Run `supabase test db`; verify expected policy failures before migrations exist.**
+- [ ] **Step 2: Run `node --test test/rls.test.mjs`; verify the expected missing-core-schema failure before the migration exists.**
 - [ ] **Step 3: Create the core migration with foreign keys, unique constraints, indexes, triggers, RLS policies, and role helper functions with a fixed `search_path`.**
-- [ ] **Step 4: Run `supabase db reset` and `supabase test db`; verify cross-group reads/writes are denied and authorized reads pass.**
+- [ ] **Step 4: Run `node --test test/rls.test.mjs`; verify cross-group reads/writes are denied and authorized reads pass in PostgreSQL WASM.**
 - [ ] **Step 5: Commit schema and RLS.**
 
 ### Task 3: Secure invitations and Google identity linking

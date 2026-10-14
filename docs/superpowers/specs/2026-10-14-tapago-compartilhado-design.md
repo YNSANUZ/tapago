@@ -52,7 +52,7 @@ Transformar o protótipo TáPago em um aplicativo web responsivo que várias pes
 
 ## Operação e publicação
 
-- Supabase CLI/local será a base para migrações repetíveis e teste das políticas. Segredos locais entram em `.env`, ignorado por Git; apenas nomes vazios aparecem em `.env.example`.
+- As migrações versionadas são a base repetível do schema. Testes locais de SQL/RLS rodam em PostgreSQL WASM (`PGlite`) quando Docker não está disponível; Auth e Realtime são validados contra o projeto TáPago isolado. Segredos locais entram em `.env`, ignorado por Git; apenas nomes vazios aparecem em `.env.example`.
 - Publicação do repositório GitHub é separada da publicação do site. O código e migrações serão revisados para segredos e arquivos da pasta pai antes do push público.
 - Publicação de `https://saiunodf.com/tapago/` exige confirmar a rota/raiz ativa, baixar e calcular hash dos arquivos atuais afetados, criar backup datado, preparar nova pasta e publicar somente arquivos do TáPago. Nenhum arquivo de `/contas/` será sobrescrito. Validar URL em celular/computador, OAuth, RLS, página pública, histórico e respostas HTTP após deploy; registrar rollback.
 - A configuração do provedor Google no Supabase requer Client ID/Secret e URLs de callback do domínio final. Segredos são configurados no painel/ambiente e nunca entram no Git. Email de convite será inicialmente compartilhado pelo administrador por link, sem integração de envio externo.
