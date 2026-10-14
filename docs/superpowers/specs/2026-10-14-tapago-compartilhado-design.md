@@ -18,7 +18,7 @@ Transformar o protótipo TáPago em um aplicativo web responsivo que várias pes
 1. Uma pessoa entra com Google e cria uma lista (taxa, contas domésticas, outra lista ou gastos pessoais recorrentes).
 2. A administradora cadastra participantes por nome e valor, inclusive antes de eles terem conta. Cada perfil sem conta continua sem acesso autenticado.
 3. Para vincular alguém, a administradora cria um convite individual ligado ao e-mail convidado e compartilha o link. O link tem token aleatório de uso único, guardado apenas em hash no banco, expira em sete dias e pode ser revogado. A aceitação exige login Google com o e-mail verificado correspondente; nome igual nunca concede acesso. O aceite vincula o UID do provedor ao perfil existente, preservando o histórico. Depois disso a foto de perfil Google substitui o avatar neutro no mesmo tamanho.
-4. Ao voltar a entrar, a pessoa vê seus grupos ativos. Remover alguém revoga o acesso atual ao grupo e ao histórico; confirmações passadas continuam registradas.
+4. Ao voltar a entrar, a pessoa vê seus grupos ativos. A administradora pode revogar um convite ainda não usado ou remover o vínculo Google de um perfil; isso desativa o acesso atual ao grupo e ao histórico, enquanto confirmações passadas continuam registradas.
 5. Participante consulta o grupo, acessa o histórico autorizado e pode enviar “Já paguei”. O aviso é separado do estado pago e aparece para administradores. A administradora confirma ou rejeita o aviso; só a confirmação altera o total recebido.
 6. Mudanças autorizadas são persistidas no banco e notificadas aos membros conectados; todos atualizam a tela a partir do registro salvo no banco. A página pública recebe somente atualizações agregadas.
 

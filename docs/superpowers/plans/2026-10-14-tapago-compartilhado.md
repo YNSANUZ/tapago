@@ -68,9 +68,8 @@
 ### Task 3: Secure invitations and Google identity linking
 
 **Files:**
-- Create: `supabase/migrations/0002_invitations.sql`, `src/auth.js`, `src/invitations.js`, `supabase/tests/database/invitations.test.sql`
-- Modify: `src/main.js`, `index.html`
-- Test: `supabase/tests/database/invitations.test.sql`, `test/invitations.test.mjs`
+- Create: `supabase/migrations/0002_invitations.sql`, `src/supabase-client.js`, `src/auth.js`, `src/invitations.js`
+- Test: `test/invitations.test.mjs`, `test/auth-invitations-client.test.mjs`, `test/pending-invitation.test.mjs`
 
 **Interfaces:**
 - `signInWithGoogle(): Promise<void>` starts OAuth with the final app callback.
@@ -80,7 +79,7 @@
 - [ ] **Step 1: Write failing tests** for exact email match, normalized case, different name/same name, invalid signature/token, expiry, revocation, replay, and account already linked.
 - [ ] **Step 2: Run the tests and confirm all invitation behaviors fail without the RPCs.**
 - [ ] **Step 3: Add transactional invitation RPCs and Supabase Google sign-in; never trust a participant name or client-supplied UID.**
-- [ ] **Step 4: Run SQL and Node tests; verify acceptance links the existing participant and a linked account gets the Google avatar.**
+- [ ] **Step 4: Run PGlite SQL and Node tests; verify acceptance links the existing participant and a linked account gets the Google avatar.**
 - [ ] **Step 5: Commit invitation flow.**
 
 ### Task 4: Fee contributions, notices, confirmations, and member Realtime
