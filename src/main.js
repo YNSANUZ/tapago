@@ -92,7 +92,7 @@ function shell(content, activeTab = 'groups') { app.innerHTML = `${content}${!st
 function demoGroupData(group) {
   if (group.group_type === 'fee') {
     const all = [...regular.map((name) => ({ id: `r-${name}`, name, amountCents: 5000 })), ...interns.map((name) => ({ id: `i-${name}`, name, amountCents: 3000 }))];
-    return { group, participants: all.map((person) => ({ ...person, paid: state.demoPaid.has(person.name), paid_at: state.demoPaid.has(person.name) ? new Date().toISOString() : null, linked_user_id: null, profile: null, paymentNotice: null })), totals: deriveFeeTotals(all.map((person) => ({ ...person, paid: state.demoPaid.has(person.name) }))) };
+    return { group, participants: all.map((person) => ({ ...person, contributionId: person.id, paid: state.demoPaid.has(person.name), paid_at: state.demoPaid.has(person.name) ? new Date().toISOString() : null, linked_user_id: null, profile: null, paymentNotice: null })), totals: deriveFeeTotals(all.map((person) => ({ ...person, paid: state.demoPaid.has(person.name) }))) };
   }
   return { group };
 }
@@ -386,7 +386,13 @@ app.addEventListener('click', async (event) => {
       await groupsApi.submitPaymentNotice(state.selectedGroupId, state.month); notify('Aviso de pagamento enviado.'); await openGroup(state.selectedGroupId);
     }
     else if (action === 'resolve-notice') { await groupsApi.resolvePaymentNotice(id, 'confirmed'); await openGroup(state.selectedGroupId); }
-    else if (action === 'confirm-payment') { await groupsApi.confirmContribution(id); await openGroup(state.selectedGroupId); }
+    else if (action === 'confirm-payment') {
+      if (state.demo) {
+        const person = state.groupView.participants.find((item) => item.contributionId === id);
+        person.paid = true; person.paid_at = new Date().toISOString(); state.demoPaid.add(person.name);
+        state.groupView.totals = deriveFeeTotals(state.groupView.participants); render();
+      } else { await groupsApi.confirmContribution(id); await openGroup(state.selectedGroupId); }
+    }
     else if (action === 'edit-amount') {
       const person = state.groupView.participants.find((item) => item.id === id);
       const value = ((person.amountCents ?? person.amount_cents) / 100).toFixed(2).replace('.', ',');
