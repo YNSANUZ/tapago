@@ -121,19 +121,18 @@
 ### Task 6: Public aggregate share and anonymous live page
 
 **Files:**
-- Create: `supabase/migrations/0005_public_shares.sql`, `src/public-summary.js`, `test/public-summary.test.mjs`, `supabase/tests/database/public.test.sql`
-- Modify: `src/main.js`, `styles.css`
-- Test: `test/public-summary.test.mjs`, `supabase/tests/database/public.test.sql`
+- Create: `supabase/migrations/0005_public_shares.sql`, `src/public-summary.js`, `test/public-summary.test.mjs`, `test/public-summary-client.test.mjs`
+- Test: `test/public-summary.test.mjs` using PGlite and `test/public-summary-client.test.mjs`
 
 **Interfaces:**
 - `getPublicSummary(slug): Promise<PublicSummary | null>` returns only approved aggregate fields through a safe database function.
 - `setPublicShare(groupId, enabled, includePix): Promise<string | null>` is admin-only and creates/revokes a random slug.
-- `subscribeToPublicSummary(slug, onChange): Channel` receives only aggregate broadcasts and does not subscribe to private rows.
+- `subscribeToPublicSummary(slug, onChange): Channel` receives only a slug hint over a public Broadcast channel and reloads aggregate RPC data; it never subscribes to private rows.
 
 - [ ] **Step 1: Write failing tests** asserting anonymous users cannot select private tables, public summary contains no participant identifiers, PIX is hidden by default, enabling shows only aggregate fields, and revocation immediately blocks reads/subscription.
 - [ ] **Step 2: Run tests to confirm anonymous access is denied and the summary RPC is absent.**
 - [ ] **Step 3: Add sanitized public-summary RPC, share toggles, aggregate-only broadcast, and `/tapago/:slug` rendering.**
-- [ ] **Step 4: Run tests; use separate anonymous and member sessions to verify visibility and live update boundaries.**
+- [ ] **Step 4: Run PGlite and adapter tests; verify anonymous aggregate visibility and revocation. Live broadcast is checked against the dedicated project in Task 8.**
 - [ ] **Step 5: Commit public sharing.**
 
 ### Task 7: Replace simulated screens with responsive shared flows
