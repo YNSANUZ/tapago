@@ -138,8 +138,8 @@
 ### Task 7: Replace simulated screens with responsive shared flows
 
 **Files:**
-- Create: `src/views/login.js`, `src/views/groups.js`, `src/views/group-detail.js`, `src/views/history.js`, `src/views/settings.js`
-- Modify: `src/main.js`, `styles.css`, `index.html`
+- Create: `src/main.js`, `src/navigation.js`, `public/.htaccess`
+- Modify: `src/groups.js`, `src/periods.js`, `styles.css`, `index.html`
 - Test: `test/navigation.test.mjs`, browser journeys in `test/e2e/`
 
 **Interfaces:**

@@ -34,6 +34,19 @@ export function createGroupService(client = getSupabaseClient()) {
     return data;
   }
   return {
+    createGroup({ type, name, description = '', dueDay = null, pixKey = null }) {
+      return rpc('create_group', { p_group_type: type, p_name: name, p_description: description, p_due_day: dueDay, p_pix_key: pixKey });
+    },
+    async addParticipant(groupId, name, amountCents) {
+      const { data, error } = await client.from('group_participants').insert({ group_id: groupId, display_name: name.trim(), amount_cents: amountCents, active: true }).select('id,display_name,amount_cents').single();
+      if (error) throw error;
+      return data;
+    },
+    async addExpenseTemplate(groupId, { name, amountCents, dueDay }) {
+      const { data, error } = await client.from('expense_templates').insert({ group_id: groupId, name: name.trim(), amount_cents: amountCents, due_day: dueDay, active: true }).select('id,name,amount_cents,due_day').single();
+      if (error) throw error;
+      return data;
+    },
     async listMyGroups() {
       const { data, error } = await client.from('group_memberships').select('role,group_id,groups(id,group_type,name,description,due_day,pix_key)').eq('active', true);
       if (error) throw error;
@@ -61,7 +74,7 @@ export function createGroupService(client = getSupabaseClient()) {
       for (const notice of noticeResult.data || []) if (!noticesByContribution.has(notice.contribution_id)) noticesByContribution.set(notice.contribution_id, notice);
       const participants = (participantResult.data || []).map((participant) => {
         const contribution = contributionByParticipant.get(participant.id);
-        return { ...participant, profile: participant.linked_user_id ? profilesByUser.get(participant.linked_user_id) || null : null, ...contribution, amountCents: contribution?.amount_cents ?? 0, paid: Boolean(contribution?.paid_at), paymentNotice: contribution ? noticesByContribution.get(contribution.id) || null : null };
+        return { ...participant, profile: participant.linked_user_id ? profilesByUser.get(participant.linked_user_id) || null : null, ...contribution, id: participant.id, contributionId: contribution?.id || null, participant_id: participant.id, amountCents: contribution?.amount_cents ?? 0, paid: Boolean(contribution?.paid_at), paymentNotice: contribution ? noticesByContribution.get(contribution.id) || null : null };
       });
       return { group: groupResult.data, participants, totals: deriveFeeTotals(participants), monthStart };
     },

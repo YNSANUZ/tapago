@@ -45,6 +45,14 @@ test('fee payments snapshot cents per month and only admins append confirmations
     assert.equal(history.rows[0].amount_cents, 5500);
     assert.ok(history.rows[0].paid_at);
     await assert.rejects(db.query('DELETE FROM public.payment_events'), (error) => error.code === '42501');
+    await db.exec('RESET ROLE');
+    await db.query("INSERT INTO public.group_participants(id,group_id,display_name,amount_cents) VALUES ('cccccccc-cccc-4ccc-8ccc-cccccccccccc',$1,'Duda',5000)", [ids.group]);
+    await db.query("SELECT public.ensure_contribution_period($1,'2026-10-01')", [ids.group]);
+    const direct = await db.query("SELECT id FROM public.monthly_contributions WHERE participant_id='cccccccc-cccc-4ccc-8ccc-cccccccccccc' AND month_start='2026-10-01'");
+    await db.query('SELECT public.confirm_contribution($1)', [direct.rows[0].id]);
+    const directStatus = await db.query('SELECT paid_at,confirmed_by FROM public.monthly_contributions WHERE id=$1', [direct.rows[0].id]);
+    assert.ok(directStatus.rows[0].paid_at);
+    assert.equal(directStatus.rows[0].confirmed_by, ids.admin);
     await t.test('outsider cannot ensure or inspect a group period', async () => {
       await asUser(db, ids.outside);
       await assert.rejects(db.query("SELECT public.ensure_contribution_period($1,'2026-12-01')", [ids.group]), (error) => error.code === '42501');

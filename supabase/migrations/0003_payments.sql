@@ -110,6 +110,8 @@ begin
   if contribution.paid_at is not null then raise exception 'payment already confirmed' using errcode='22023'; end if;
   insert into public.payment_events (group_id,contribution_id,event_type,amount_cents,actor_id) values (contribution.group_id,contribution.id,'confirmed',contribution.amount_cents,auth.uid()) returning id into event_id;
   update public.monthly_contributions set confirmed_amount_cents=amount_cents,paid_at=now(),confirmed_by=auth.uid(),updated_at=now() where id=contribution.id;
+  update public.payment_notices set status='confirmed',resolved_at=now(),resolved_by=auth.uid()
+    where contribution_id=contribution.id and status='pending';
   return event_id;
 end; $$;
 

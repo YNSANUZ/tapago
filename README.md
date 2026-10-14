@@ -12,9 +12,9 @@ Aplicativo responsivo para acompanhar taxas e despesas compartilhadas. O fronten
 
 O bundle público precisa de `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY`. A chave `service_role` nunca pode ser usada no navegador. A segurança depende de RLS e validação das funções do banco.
 
-## Supabase local
+## Banco e testes
 
-Consulte `docs/OPERATIONS.md` para iniciar o stack local, aplicar migrações e rodar os testes de banco. O ambiente local e as amostras fictícias não alteram NEXO Contas nem projetos remotos.
+As migrações versionadas ficam em `supabase/migrations/`. A suíte aplica o PostgreSQL real em WebAssembly (PGlite) e valida RLS, convites, pagamentos, histórico e resumo público sem acessar uma conta remota. Para testar Auth Google e Realtime hospedado, configure um projeto Supabase exclusivo do TáPago; não conecte este app a projetos de outros sites.
 
 ## Publicação
 

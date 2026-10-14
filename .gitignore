@@ -6,5 +6,7 @@ dist/
 playwright-report/
 test-results/
 supabase/.temp/
+app.js
+preview-server.js
 .DS_Store
 Thumbs.db

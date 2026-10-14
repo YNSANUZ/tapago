@@ -13,7 +13,7 @@ declare
   local_month date := date_trunc('month', now() at time zone 'America/Sao_Paulo')::date;
 begin
   if auth.uid() is null or not public.is_group_admin(p_group_id) then raise exception 'administrator access required' using errcode='42501'; end if;
-  if not exists (select 1 from public.groups where id=p_group_id and group_type='personal') then raise exception 'recurring expenses require a personal list' using errcode='22023'; end if;
+  if not exists (select 1 from public.groups where id=p_group_id and group_type in ('personal','household','other')) then raise exception 'recurring expenses require an expense list' using errcode='22023'; end if;
   insert into public.expense_occurrences(expense_id,month_start,due_date,amount_cents,status)
   select e.id,local_month,
     make_date(extract(year from local_month)::int,extract(month from local_month)::int,

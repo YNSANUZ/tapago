@@ -28,6 +28,15 @@ test('.env is ignored while the sanitized example remains trackable', () => {
   assert.equal(exampleIgnored.status, 1, '.env.example must remain publishable');
 });
 
+test('prototype-only local files are excluded from the standalone public repository', () => {
+  for (const file of ['app.js', 'preview-server.js']) {
+    const ignored = spawnSync('git', ['check-ignore', '-q', file], { cwd: root });
+    assert.equal(ignored.status, 0, `${file} must not be published with the backend app`);
+    const tracked = spawnSync('git', ['ls-files', '--error-unmatch', file], { cwd: root, stdio: 'ignore' });
+    assert.notEqual(tracked.status, 0, `${file} must remain outside the public source history`);
+  }
+});
+
 test('.env.example contains blank public settings and no privileged key', () => {
   const file = path.join(root, '.env.example');
   assert.equal(statSync(file, { throwIfNoEntry: false })?.isFile(), true, '.env.example must exist');
@@ -40,6 +49,7 @@ test('.env.example contains blank public settings and no privileged key', () => 
 test('the distributable exists and contains no service-role credential', () => {
   const bundle = filesUnder(path.join(root, 'dist'));
   assert.ok(bundle.length > 0, 'the static build must exist');
+  assert.equal(bundle.some((file) => path.basename(file).toLowerCase() === '.htaccess'), true, 'public slug routes need an app-local Apache fallback');
   for (const file of bundle) {
     const content = readFileSync(file, 'utf8');
     assert.doesNotMatch(content, /SUPABASE_SERVICE_ROLE_KEY|service_role|sb_secret_[A-Za-z0-9_-]{12,}/i, path.relative(root, file));
