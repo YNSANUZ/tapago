@@ -10,7 +10,7 @@ Aplicativo responsivo para acompanhar taxas e despesas compartilhadas. O fronten
 4. `npm run dev`
 5. `npm test` e `npm run build`
 
-O bundle público precisa de `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY`. A chave `service_role` nunca pode ser usada no navegador. A segurança depende de RLS e validação das funções do banco.
+O bundle público precisa de `VITE_SUPABASE_URL` e da chave `VITE_SUPABASE_PUBLISHABLE_KEY` (a variável legada `VITE_SUPABASE_ANON_KEY` ainda funciona como alternativa). Nunca use a chave secreta ou `service_role` no navegador. A segurança depende de RLS e validação das funções do banco.
 
 ## Banco e testes
 
